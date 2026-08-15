@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TENANT
+  LANDLORD
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REMOVED
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  password        String
+  role            Role      @default(TENANT)
+  budget          Int?
+  preferredCity   String?
+  moveDate        DateTime?
+  status          UserStatus @default(ACTIVE)
+  createdAt       DateTime  @default(now())
+
+  properties        Property[]
+  sentMessages       Message[]       @relation("sender")
+  receivedMessages   Message[]       @relation("receiver")
+  verification        Verification?
+  savedProperties     SavedProperty[]
+  reportsFiled         Report[]       @relation("reporter")
+  reportsAgainst        Report[]      @relation("reported")
+}
+
+model Verification {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  idDocumentUrl String
+  idType        String
+  status        VerificationStatus @default(PENDING)
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  submittedAt   DateTime @default(now())
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  rent        Int
+  state       String
+  city        String
+  bedrooms    Int
+  bathrooms   Int
+  furnished   Boolean  @default(false)
+  photos      String[]
+  landlordId  String
+  landlord    User     @relation(fields: [landlordId], references: [id])
+
+  ownershipDocUrl  String?
+  verifiedProperty Boolean @default(false)
+
+  status    ListingStatus @default(PENDING)
+  createdAt DateTime @default(now())
+
+  messages Message[]
+  savedBy  SavedProperty[]
+  reports  Report[]
+}
+
+model Message {
+  id            String   @id @default(cuid())
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id])
+  senderId      String
+  sender        User     @relation("sender", fields: [senderId], references: [id])
+  receiverId    String
+  receiver      User     @relation("receiver", fields: [receiverId], references: [id])
+  content       String
+  contactShared Boolean  @default(false)
+  createdAt     DateTime @default(now())
+}
+
+model SavedProperty {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+}
+
+model Report {
+  id             String   @id @default(cuid())
+  reporterId     String
+  reporter       User     @relation("reporter", fields: [reporterId], references: [id])
+  reportedUserId String?
+  reportedUser   User?    @relation("reported", fields: [reportedUserId], references: [id])
+  propertyId     String?
+  property       Property? @relation(fields: [propertyId], references: [id])
+  reason         String
+  details        String?
+  status         ReportStatus @default(OPEN)
+  createdAt      DateTime @default(now())
+}
