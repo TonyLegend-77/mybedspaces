@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -21,14 +21,19 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    setLoading(false);
-
     if (res?.error) {
+      setLoading(false);
       setError(res.error);
       return;
     }
 
-    router.push("/");
+    const session = await getSession();
+    const role = (session?.user as any)?.role;
+
+    if (role === "ADMIN") router.push("/admin/dashboard");
+    else if (role === "LANDLORD") router.push("/landlord/dashboard");
+    else router.push("/dashboard");
+
     router.refresh();
   }
 

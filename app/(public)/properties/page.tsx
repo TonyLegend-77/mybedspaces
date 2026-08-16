@@ -25,69 +25,75 @@ export default async function PropertiesPage({
   });
 
   return (
-    <div>
-      <form className="relative mb-4">
-        <Search
-          size={16}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
-        />
-        <input
-          name="city"
-          defaultValue={city}
-          placeholder="Search area..."
-          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-9 pr-3 text-sm"
-        />
-      </form>
-
-      <details className="mb-4 rounded-xl border border-neutral-200 bg-white p-3 text-sm">
-        <summary className="cursor-pointer font-medium text-neutral-700">
-          Filters
-        </summary>
-        <form className="mt-3 space-y-2">
-          <input
-            name="state"
-            defaultValue={state}
-            placeholder="State"
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          />
-          <div className="flex gap-2">
-            <input
-              name="minPrice"
-              defaultValue={minPrice}
-              placeholder="Min ₦"
-              className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+    <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <form className="space-y-4 md:col-span-1">
+          <div className="relative">
+            <Search
+              size={16}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
             />
             <input
-              name="maxPrice"
-              defaultValue={maxPrice}
-              placeholder="Max ₦"
-              className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+              name="city"
+              defaultValue={city}
+              placeholder="Search area..."
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-9 pr-3 text-sm"
             />
           </div>
-          <input
-            name="bedrooms"
-            defaultValue={bedrooms}
-            placeholder="Bedrooms"
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          />
-          <button className="w-full rounded-lg bg-brand-600 py-2 text-sm text-white">
-            Apply
-          </button>
+
+          <div className="rounded-xl border border-neutral-200 bg-white p-4">
+            <h2 className="mb-3 text-sm font-semibold">Filters</h2>
+            <div className="space-y-2">
+              <input
+                name="state"
+                defaultValue={state}
+                placeholder="State"
+                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+              />
+              <div className="flex gap-2">
+                <input
+                  name="minPrice"
+                  defaultValue={minPrice}
+                  placeholder="Min ₦"
+                  className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                />
+                <input
+                  name="maxPrice"
+                  defaultValue={maxPrice}
+                  placeholder="Max ₦"
+                  className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                />
+              </div>
+              <input
+                name="bedrooms"
+                defaultValue={bedrooms}
+                placeholder="Bedrooms"
+                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+              />
+              <button className="w-full rounded-lg bg-brand-600 py-2 text-sm text-white">
+                Apply
+              </button>
+            </div>
+          </div>
         </form>
-      </details>
 
-      <p className="mb-3 text-sm text-neutral-500">
-        {properties.length} propert{properties.length === 1 ? "y" : "ies"} found
-      </p>
-
-      <div className="space-y-4">
-        {properties.length === 0 ? (
-          <p className="mt-8 text-center text-sm text-neutral-500">
-            No listings match those filters yet. Try widening your search.
+        <div className="md:col-span-3">
+          <p className="mb-4 text-sm text-neutral-500">
+            {properties.length} propert{properties.length === 1 ? "y" : "ies"} found
           </p>
-        ) : (
-          properties.map((p) => <PropertyCard key={p.id} property={p} />)
-        )}
+
+          {properties.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-neutral-300 py-16 text-center text-sm text-neutral-500">
+              No listings match those filters yet. Try widening your search.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {properties.map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

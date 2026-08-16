@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Search, Heart, MessageCircle, User, LayoutDashboard } from "lucide-react";
+import { Search, Heart, MessageCircle, User, LayoutDashboard, Coins } from "lucide-react";
 
 export default function BottomTabBar() {
   const pathname = usePathname();
@@ -28,13 +28,13 @@ export default function BottomTabBar() {
       ]
     : [
         { href: "/properties", label: "Search", icon: Search },
-        { href: "/messages", label: "Messages", icon: MessageCircle },
+        { href: "/credits", label: "Credits", icon: Coins },
         { href: "/saved", label: "Saved", icon: Heart },
         { href: session ? "/dashboard" : "/login", label: "Profile", icon: User },
       ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-200 bg-white pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden">
       <div className="mx-auto flex max-w-md items-center justify-around py-2">
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname?.startsWith(tab.href + "/");
