@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import PropertyCard from "@/components/PropertyCard";
+import { Search } from "lucide-react";
 
 export default async function PropertiesPage({
   searchParams,
@@ -24,95 +25,68 @@ export default async function PropertiesPage({
   });
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-      <form className="space-y-4 lg:col-span-1">
-        <h2 className="font-semibold">Filters</h2>
-        <input
-          name="state"
-          defaultValue={state}
-          placeholder="State"
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+    <div>
+      <form className="relative mb-4">
+        <Search
+          size={16}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
         />
         <input
           name="city"
           defaultValue={city}
-          placeholder="City"
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          placeholder="Search area..."
+          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-9 pr-3 text-sm"
         />
-        <div className="flex gap-2">
-          <input
-            name="minPrice"
-            defaultValue={minPrice}
-            placeholder="Min ₦"
-            className="w-1/2 rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          />
-          <input
-            name="maxPrice"
-            defaultValue={maxPrice}
-            placeholder="Max ₦"
-            className="w-1/2 rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          />
-        </div>
-        <input
-          name="bedrooms"
-          defaultValue={bedrooms}
-          placeholder="Bedrooms"
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-        />
-        <select
-          name="furnished"
-          defaultValue={furnished || ""}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-        >
-          <option value="">Furnished / Unfurnished</option>
-          <option value="true">Furnished</option>
-          <option value="false">Unfurnished</option>
-        </select>
-        <button className="w-full rounded-md bg-brand-600 py-2 text-sm text-white hover:bg-brand-700">
-          Apply filters
-        </button>
       </form>
 
-      <div className="lg:col-span-3">
-        <h1 className="mb-4 text-xl font-semibold">
-          {properties.length} propert{properties.length === 1 ? "y" : "ies"} found
-        </h1>
+      <details className="mb-4 rounded-xl border border-neutral-200 bg-white p-3 text-sm">
+        <summary className="cursor-pointer font-medium text-neutral-700">
+          Filters
+        </summary>
+        <form className="mt-3 space-y-2">
+          <input
+            name="state"
+            defaultValue={state}
+            placeholder="State"
+            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          />
+          <div className="flex gap-2">
+            <input
+              name="minPrice"
+              defaultValue={minPrice}
+              placeholder="Min ₦"
+              className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+            />
+            <input
+              name="maxPrice"
+              defaultValue={maxPrice}
+              placeholder="Max ₦"
+              className="w-1/2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+            />
+          </div>
+          <input
+            name="bedrooms"
+            defaultValue={bedrooms}
+            placeholder="Bedrooms"
+            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          />
+          <button className="w-full rounded-lg bg-brand-600 py-2 text-sm text-white">
+            Apply
+          </button>
+        </form>
+      </details>
 
+      <p className="mb-3 text-sm text-neutral-500">
+        {properties.length} propert{properties.length === 1 ? "y" : "ies"} found
+      </p>
+
+      <div className="space-y-4">
         {properties.length === 0 ? (
-          <p className="text-neutral-500">
+          <p className="mt-8 text-center text-sm text-neutral-500">
             No listings match those filters yet. Try widening your search.
           </p>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {properties.map((p) => (
-              <Link
-                key={p.id}
-                href={`/properties/${p.id}`}
-                className="block rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md"
-              >
-                {p.photos[0] && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.photos[0]}
-                    alt={p.title}
-                    className="mb-3 h-40 w-full rounded-md object-cover"
-                  />
-                )}
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium">{p.title}</h3>
-                  {p.verifiedProperty && (
-                    <span className="rounded bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
-                      Verified
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-neutral-500">
-                  {p.city}, {p.state} · {p.bedrooms} bed · {p.bathrooms} bath
-                </p>
-                <p className="mt-1 font-semibold">₦{p.rent.toLocaleString()}/yr</p>
-              </Link>
-            ))}
-          </div>
+          properties.map((p) => <PropertyCard key={p.id} property={p} />)
         )}
       </div>
     </div>

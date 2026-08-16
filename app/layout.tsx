@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
-import Navbar from "@/components/Navbar";
+import TopHeader from "@/components/TopHeader";
+import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
-  title: "USOConnect Homes",
+  title: "My BedSpace",
   description: "Connect tenants and landlords directly, without the scams.",
 };
 
@@ -17,8 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider>
-          <Navbar />
-          <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+          <TopHeader />
+          <main className="mx-auto max-w-md px-4 pb-24 pt-4">{children}</main>
+          <BottomTabBar />
         </SessionProvider>
       </body>
     </html>
