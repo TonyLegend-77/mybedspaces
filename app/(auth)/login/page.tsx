@@ -62,6 +62,12 @@ export default function LoginPage() {
           {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
+      <p className="mt-4 text-center text-sm text-neutral-500">
+        Don't have an account?{" "}
+        <a href="/register" className="text-brand-600 underline">
+          Sign up
+        </a>
+      </p>
     </div>
   );
 }
