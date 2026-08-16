@@ -3,6 +3,7 @@ import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 import TopHeader from "@/components/TopHeader";
 import BottomTabBar from "@/components/BottomTabBar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "My BedSpace",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <SessionProvider>
           <TopHeader />
           <main className="mx-auto max-w-md px-4 pb-24 pt-4">{children}</main>
+          <Footer />
           <BottomTabBar />
         </SessionProvider>
       </body>

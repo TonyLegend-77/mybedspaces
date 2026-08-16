@@ -3,6 +3,7 @@ import { z } from "zod";
 export const registerSchema = z.object({
   name: z.string().min(2, "Name is too short."),
   email: z.string().email("Enter a valid email."),
+  phone: z.string().min(7, "Enter a valid phone number."),
   password: z.string().min(8, "Password must be at least 8 characters."),
   role: z.enum(["TENANT", "LANDLORD"]),
   budget: z.number().int().positive().optional(),

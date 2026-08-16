@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function RegisterPage() {
   const router = useRouter();
   const [role, setRole] = useState<"TENANT" | "LANDLORD">("TENANT");
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -65,6 +65,14 @@ export default function RegisterPage() {
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="w-full rounded-md border border-neutral-300 px-4 py-2"
+        />
+        <input
+          required
+          type="tel"
+          placeholder="Phone number"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="w-full rounded-md border border-neutral-300 px-4 py-2"
         />
         <input

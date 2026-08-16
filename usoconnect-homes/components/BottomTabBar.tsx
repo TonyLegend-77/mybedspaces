@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Search, Heart, MessageCircle, User, LayoutDashboard } from "lucide-react";
+import { Search, Heart, MessageCircle, User, LayoutDashboard, Coins } from "lucide-react";
 
 export default function BottomTabBar() {
   const pathname = usePathname();
@@ -28,7 +28,7 @@ export default function BottomTabBar() {
       ]
     : [
         { href: "/properties", label: "Search", icon: Search },
-        { href: "/messages", label: "Messages", icon: MessageCircle },
+        { href: "/credits", label: "Credits", icon: Coins },
         { href: "/saved", label: "Saved", icon: Heart },
         { href: session ? "/dashboard" : "/login", label: "Profile", icon: User },
       ];

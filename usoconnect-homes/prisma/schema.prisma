@@ -42,12 +42,14 @@ model User {
   id              String    @id @default(cuid())
   name            String
   email           String    @unique
+  phone           String?
   password        String
   role            Role      @default(TENANT)
   budget          Int?
   preferredCity   String?
   moveDate        DateTime?
   status          UserStatus @default(ACTIVE)
+  creditBalance   Int       @default(0)
   createdAt       DateTime  @default(now())
 
   properties        Property[]
@@ -57,6 +59,8 @@ model User {
   savedProperties     SavedProperty[]
   reportsFiled         Report[]       @relation("reporter")
   reportsAgainst        Report[]      @relation("reported")
+  creditTransactions    CreditTransaction[]
+  propertyUnlocks       PropertyUnlock[]
 }
 
 model Verification {
@@ -82,6 +86,9 @@ model Property {
   bathrooms   Int
   furnished   Boolean  @default(false)
   photos      String[]
+  videoUrl    String?
+  latitude    Float?
+  longitude   Float?
   landlordId  String
   landlord    User     @relation(fields: [landlordId], references: [id])
 
@@ -94,6 +101,7 @@ model Property {
   messages Message[]
   savedBy  SavedProperty[]
   reports  Report[]
+  unlocks  PropertyUnlock[]
 }
 
 model Message {
@@ -132,4 +140,36 @@ model Report {
   details        String?
   status         ReportStatus @default(OPEN)
   createdAt      DateTime @default(now())
+}
+
+enum CreditTransactionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model CreditTransaction {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  amountNaira   Int      // e.g. 1000
+  creditsBought Int      // e.g. 100
+  bankReference String   // what the user typed in as proof of transfer
+  status        CreditTransactionStatus @default(PENDING)
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model PropertyUnlock {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  creditsSpent Int    @default(50)
+  unlockedAt DateTime @default(now())
+  expiresAt  DateTime // unlockedAt + 48 hours
+
+  @@unique([userId, propertyId])
 }
